@@ -2,6 +2,7 @@
 
 ```ruby
 class Array
+  def lerp(t); first.lerp(t) * (1.0 - t) + last.lerp(t) * t  end
   def to_bi_tree
     return self if size == 2
     result = []
