@@ -1,11 +1,11 @@
 # Hello
 ## OpenGL Ruby
 ### Install
-To start working with OpenGL in Ruby you have to install some system packages
+To start working with OpenGL in Ruby you have to install some system packages first
 
     sudo apt-get install mesa-utils mesa-common-dev freeglut3-dev
 
-And install gems glu/glut/opengl
+And install the following gems glu/glut/opengl
 
     bundle install
 
