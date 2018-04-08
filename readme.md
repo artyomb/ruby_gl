@@ -1,10 +1,13 @@
 # Hello
 ## OpenGL Ruby
 ### Install
-    sudo apt-get install mesa-utils mesa-common-dev freeglut3-dev
-    bundle install
+To start working with OpenGL in Ruby you have to install some system packages
 
-<img src="https://www.jasondavies.com/animated-bezier/full.png" width="600" height="whatever">
+    sudo apt-get install mesa-utils mesa-common-dev freeglut3-dev
+
+And install gems glu/glut/opengl
+
+    bundle install
 
  ### Usage example
 
