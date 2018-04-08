@@ -89,10 +89,6 @@ def Vector.random(range = 0..1.0)
   Vector[rand(range), rand(range)]
 end
 
-class Array
-  def path; self end
-end
-
 class Physics
   def initialize
     @forces = []
