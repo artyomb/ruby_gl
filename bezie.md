@@ -1,6 +1,10 @@
 # <img src="https://www.jasondavies.com/animated-bezier/full.png" width="600" height="whatever">
 
 ```ruby
+class Vector
+  def lerp(t);  self end
+end
+
 class Array
   def lerp(t); first.lerp(t) * (1.0 - t) + last.lerp(t) * t  end
   def to_bi_tree
