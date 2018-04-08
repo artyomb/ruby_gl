@@ -9,7 +9,10 @@ And install the following gems glu/glut/opengl
 
     bundle install
 
- ### Usage example
+### Bezie
+[Simple Bezie curve eaxample](bezie.md)
+
+### Usage example
 
  ```ruby
 renderer = Render.new

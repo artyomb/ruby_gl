@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# <img src="https://www.jasondavies.com/animated-bezier/full.png" width="600" height="whatever">
 require './lib/render'
 require './lib/physics'
 
