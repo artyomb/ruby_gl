@@ -90,6 +90,9 @@ def Vector.random(range = 0..1.0)
   Vector[rand(range), rand(range)]
 end
 
+class Array
+  def path; self end
+end
 
 class Physics
   def initialize
@@ -115,9 +118,6 @@ class Physics
   end
 end
 
-class Array
-  def path; self end
-end
 
 
 module PhysicsObject
@@ -153,11 +153,13 @@ class TailedObject
 end
 
 objects = []
-objects += Array.new(10) { TailedObject.new position: Vector.random(0..500), velocity: Vector.random(-1.0..1.0) }
+objects += Array.new(10) {
+  TailedObject.new position: Vector.random(0..500),
+                   velocity: Vector.random(-1.0..1.0)
+}
 
 renderer = Render.new
-renderer.scene = { objects: objects, types: {
-    TailedObject => [:point, :path] } }
+renderer.scene = { objects: objects, types: { TailedObject => [:point, :path] } }
 
 physics = Physics.new
 renderer.run do
