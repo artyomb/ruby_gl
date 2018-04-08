@@ -1,5 +1,7 @@
 # <img src="https://www.jasondavies.com/animated-bezier/full.png" width="600" height="whatever">
 
+[bezie.rb](bezie.rb)
+
 ```ruby
 class Vector
   def lerp(t);  self end
