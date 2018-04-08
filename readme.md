@@ -9,8 +9,8 @@ And install the following gems glu/glut/opengl
 
     bundle install
 
-### Bezie
-[Simple Bezie curve eaxample](bezie.md)
+### Bezier
+[Simple Bezier curve eaxample](bezier.md)
 
 ### Usage example
 
