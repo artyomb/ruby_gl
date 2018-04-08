@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# https://vectr.com/tmp/b1vPZfoE0b/a1Q2d7s6e
 require 'matrix'
 
 require 'opengl'
