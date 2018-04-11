@@ -10,11 +10,11 @@ And install the following gems glu/glut/opengl
     bundle install
 
 ### Bezier
-[Simple Bezier curve eaxample](bezier.md)
+[Simple Bezier curve example](bezier.md)
 
 ### Usage example
 
- ```ruby
+```ruby
 renderer = Render.new
 renderer.scene = { objects: objects, types: { TailedObject => [:point, :path] } }
 
@@ -22,5 +22,5 @@ physics = Physics.new
 renderer.run do
   physics.step renderer.scene[:objects], Time.now.to_f
 end
- ```
+```
  
