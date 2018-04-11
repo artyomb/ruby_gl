@@ -28,7 +28,7 @@ end
 objects = []
 # https://stackoverflow.com/questions/6711707/draw-a-quadratic-b%C3%A9zier-curve-through-three-given-points
 # connect curves https://www.scratchapixel.com/lessons/advanced-rendering/bezier-curve-rendering-utah-teapot
-points = [Vector[10, 10], Vector[210, 10], Vector[200, 250], Vector[400, 10]]
+points = [Vector[10, 10], Vector[210, 100], Vector[200, 250], Vector[400, 10]]
 bezier_curve = points.to_bi_tree
 
 objects += points
