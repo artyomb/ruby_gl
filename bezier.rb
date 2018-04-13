@@ -3,27 +3,32 @@ require './lib/render'
 require './lib/physics'
 
 class Vector
-  def lerp(t);  self end
+  def lerp(*); self end
   def position; self end
 end
 
 class Array
-  def lerp(t); first.lerp(t) * (1.0 - t) + last.lerp(t) * t  end
+  def lerp(t)
+    first.lerp(t) * (1.0 - t) + last.lerp(t) * t
+  end
+
   def path; self end
+
   def to_bi_tree
-    return self if size == 2
-    result = []
-    each_index do |index|
-      next if index == 0
-      result << [self[index-1], self[index]]
-    end
-    result.to_bi_tree
+    size == 2 ? self :
+    each_index.map do |index|
+      [self[index], self[index + 1]]
+    end[0...-1].to_bi_tree
   end
 end
 
 def make_lerp_path(tuple, steps)
-  steps.times.map { |index| tuple.lerp(index.to_f / (steps - 1)) }
+  Array.new(steps) { |index| tuple.lerp(index.to_f / (steps - 1)) }
 end
+
+p [0, 1].to_bi_tree # [[0, 1], [1, 2]]
+p [0, 1, 2].to_bi_tree # [[0, 1], [1, 2]]
+p [0, 1, 2, 4].to_bi_tree # [[[0, 1], [1, 2]], [[1, 2], [2, 4]]]
 
 objects = []
 # https://stackoverflow.com/questions/6711707/draw-a-quadratic-b%C3%A9zier-curve-through-three-given-points
@@ -32,11 +37,11 @@ points = [Vector[10, 10], Vector[210, 100], Vector[200, 250], Vector[400, 10]]
 bezier_curve = points.to_bi_tree
 
 objects += points
-objects << make_lerp_path( bezier_curve, 30)
+objects << make_lerp_path(bezier_curve, 30)
 
 renderer = Render.new
 renderer.scene = { objects: objects, types: {
-    Vector => :point, Array => :path
+  Vector => :point, Array => :path
 } }
 
 renderer.run
