@@ -30,15 +30,25 @@ p [0, 1, 2, 3].to_bi_tree # [[[0, 1], [1, 2]], [[1, 2], [2, 3]]]
 objects = []
 # https://stackoverflow.com/questions/6711707/draw-a-quadratic-b%C3%A9zier-curve-through-three-given-points
 # connect curves https://www.scratchapixel.com/lessons/advanced-rendering/bezier-curve-rendering-utah-teapot
-points = [Vector[10, 10], Vector[210, 100], Vector[200, 250], Vector[400, 10]]
-bezier_curve = points.to_bi_tree
+points = [Vector[10, 10], Vector[210, 50], Vector[150, 250], Vector[400, 10]]
+bezier = points.to_bi_tree
 
-objects += points
-objects << make_lerp_path(bezier_curve, 30)
+objects << Render.grey(points)
+objects += points.map { |p| Render.white p }
+
+curve = make_lerp_path(bezier, 30)
+objects << Render.green(curve)
+
+# r_proc = Render.proc do |o|
+#   color red
+#   point o.position
+#   path o.path
+# end
+
 
 renderer = Render.new
 renderer.scene = { objects: objects, types: {
-  Vector => { point: ->(v) { v } }, Array => { path: ->(a) { a } }
+  Vector => { circle: ->(v) { v } }, Array => { path: ->(a) { a } }
 } }
 
 renderer.run

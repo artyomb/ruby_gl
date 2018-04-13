@@ -6,6 +6,14 @@ include Gl, Glu, Glut
 require 'matrix'
 
 class Render
+  def self.set_color(obj, col = [1, 0, 0] )
+    obj.define_singleton_method :color, ->() { col }
+    obj
+  end
+  def self.green(obj); set_color obj, [0, 1, 0] end
+  def self.grey(obj); set_color obj, [0.3, 0.3, 0.3] end
+  def self.white(obj); set_color obj, [1, 1, 1] end
+
   def point(pos)
     size = 4
     glTranslate pos[0] - size * 0.5, pos[1] - size * 0.5, 0
@@ -16,6 +24,18 @@ class Render
   def path(array)
     glBegin GL_LINE_STRIP
     array.each { |v| glVertex2fv v }
+    glEnd
+  end
+
+  def circle(pos, size = 7.0, steps = 10)
+    glTranslate pos[0], pos[1], 0
+    glBegin GL_POLYGON
+    #glBegin GL_LINE_LOOP
+    i = 0
+    while i < 2 * Math::PI
+      i += Math::PI / steps
+      glVertex3f Math.cos(i) * size, Math.sin(i) * size, 0.0
+    end
     glEnd
   end
 

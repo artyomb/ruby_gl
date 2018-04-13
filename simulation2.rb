@@ -35,7 +35,7 @@ objects += Array.new(10) { TailedObject.new position: Vector.random(0..500), vel
 
 renderer = Render.new
 renderer.scene = { objects: objects,
-                   types: { TailedObject => { point: ->(o) { o.position }, path: ->(o) { o.path } } } }
+                   types: { TailedObject => { circle: ->(o) { o.position }, path: ->(o) { o.path } } } }
 
 physics = Physics.new
 physics.forces << proc do |obj|
