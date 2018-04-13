@@ -19,14 +19,13 @@ class TailedObject
   def step(time)
     @last ||= time
     if time - @last < 3
-      @path[@path.size - 1] = position.dup unless @path.empty?
+      @path[0] = position.dup unless @path.empty?
       return
     end
     @last = time
 
-    @path << position.dup
-    size = [@path.size, 6].min
-    @path.replace @path[-size..size]
+    @path.unshift position.dup
+    @path.slice!(6..-1)
   end
 end
 
