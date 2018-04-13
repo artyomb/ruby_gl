@@ -16,7 +16,8 @@ And install the following gems glu/glut/opengl
 
 ```ruby
 renderer = Render.new
-renderer.scene = { objects: objects, types: { TailedObject => [:point, :path] } }
+renderer.scene = { objects: objects,
+                   types: { TailedObject => { point: ->(o) { o.position }, path: ->(o) { o.path } } } }
 
 physics = Physics.new
 renderer.run do
