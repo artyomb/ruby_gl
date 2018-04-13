@@ -25,7 +25,7 @@ end
 
 p [0, 1].to_bi_tree # [0, 1]
 p [0, 1, 2].to_bi_tree # [[0, 1], [1, 2]]
-p [0, 1, 2, 4].to_bi_tree # [[[0, 1], [1, 2]], [[1, 2], [2, 4]]]
+p [0, 1, 2, 3].to_bi_tree # [[[0, 1], [1, 2]], [[1, 2], [2, 3]]]
 
 objects = []
 # https://stackoverflow.com/questions/6711707/draw-a-quadratic-b%C3%A9zier-curve-through-three-given-points

@@ -20,7 +20,7 @@ end
 
 p [0, 1].to_bi_tree # [0, 1]
 p [0, 1, 2].to_bi_tree # [[0, 1], [1, 2]]
-p [0, 1, 2, 4].to_bi_tree # [[[0, 1], [1, 2]], [[1, 2], [2, 4]]]
+p [0, 1, 2, 3].to_bi_tree # [[[0, 1], [1, 2]], [[1, 2], [2, 3]]]
 
 points = [Vector[10, 10], Vector[210, 10], Vector[200, 250], Vector[400, 10]]
 bezier_curve = points.to_bi_tree
