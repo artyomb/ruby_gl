@@ -4,15 +4,12 @@ require './lib/physics'
 
 class Vector
   def lerp(*); self end
-  def position; self end
 end
 
 class Array
   def lerp(t)
     first.lerp(t) * (1.0 - t) + last.lerp(t) * t
   end
-
-  def path; self end
 
   def to_bi_tree
     size == 2 ? self :
@@ -41,7 +38,7 @@ objects << make_lerp_path(bezier_curve, 30)
 
 renderer = Render.new
 renderer.scene = { objects: objects, types: {
-  Vector => :point, Array => :path
+  Vector => { point: ->(v) { v } }, Array => { path: ->(a) { a } }
 } }
 
 renderer.run

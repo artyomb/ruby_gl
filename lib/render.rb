@@ -6,17 +6,16 @@ include Gl, Glu, Glut
 require 'matrix'
 
 class Render
-  def point(obj)
-    pos = obj.position
+  def point(pos)
     size = 4
     glTranslate pos[0] - size * 0.5, pos[1] - size * 0.5, 0
     glScale size, size, size
     glCallList @quad
   end
 
-  def path(obj)
+  def path(array)
     glBegin GL_LINE_STRIP
-    obj.path.each { |v| glVertex2fv v }
+    array.each { |v| glVertex2fv v }
     glEnd
   end
 
@@ -44,6 +43,7 @@ class Render
     glVertex2f 0, 0 + 1
     glEnd
     glEndList
+    @scene = { objects: [], types: {} }
   end
 
   def render
@@ -54,13 +54,15 @@ class Render
     glColor3fv [0.1, 1.0, 0.1]
     @scene[:objects].each do |obj|
       types = [scene[:types][obj.class]].flatten
-      types.each { |type|
-        glPushMatrix
-        glColor3fv obj.color if obj.respond_to? :color
-        send type, obj
-        glPopMatrix
-      }
-    end if @scene
+      types.each do |type|
+        type.each do |name, func|
+          glPushMatrix
+          glColor3fv obj.color if obj.respond_to? :color
+          send name, func.call(obj)
+          glPopMatrix
+        end
+      end
+    end
 
     glutSwapBuffers
   end
