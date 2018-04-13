@@ -5,14 +5,17 @@ include Gl, Glu, Glut
 
 require 'matrix'
 
-class Render
-  def self.set_color(obj, col = [1, 0, 0] )
-    obj.define_singleton_method :color, ->() { col }
-    obj
+class Object
+  def attr(sym, value)
+    define_singleton_method sym, ->() { value }
+    self
   end
-  def self.green(obj); set_color obj, [0, 1, 0] end
-  def self.grey(obj); set_color obj, [0.3, 0.3, 0.3] end
-  def self.white(obj); set_color obj, [1, 1, 1] end
+end
+
+class Render
+  def self.green(obj); obj.attr(:color, [0, 1, 0]) end
+  def self.grey(obj); obj.attr(:color, [0.3, 0.3, 0.3]) end
+  def self.white(obj); obj.attr(:color, [1, 1, 1]) end
 
   def point(pos)
     size = 4

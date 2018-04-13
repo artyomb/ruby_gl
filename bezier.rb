@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 require './lib/render'
-require './lib/physics'
 
 class Vector
   def lerp(*); self end
