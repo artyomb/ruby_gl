@@ -25,5 +25,5 @@ p [0, 1, 2, 3].to_bi_tree # [[[0, 1], [1, 2]], [[1, 2], [2, 3]]]
 points = [Vector[10, 10], Vector[210, 10], Vector[200, 250], Vector[400, 10]]
 bezier_curve = points.to_bi_tree
 
-path = Array.new(steps) { |index| bezier_curve.lerp(index.to_f / (10 - 1)) }
+path = Array.new(steps) { |index| bezier_curve.lerp(index.to_f / (steps - 1)) }
 ```
