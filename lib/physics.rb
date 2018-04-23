@@ -25,7 +25,7 @@ class Physics
       next unless obj.class.ancestors.include? PhysicsObject
       obj.position += obj.velocity * delta
       acceleration = @forces.inject(Vector[0,0]) { |sum, force| sum + force.call(obj) }
-      obj.velocity += acceleration * delta
+      obj.velocity += acceleration * delta / obj.mass
     end
   end
 end

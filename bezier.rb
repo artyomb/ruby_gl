@@ -38,7 +38,7 @@ objects += points.map { |p| Render.white p }
 curve = make_lerp_path(bezier, 30)
 objects << Render.green(curve)
 
-renderer = Render.new
+renderer = Render.new title: 'Bezier curve'
 renderer.scene = { objects: objects, types: {
   Vector => { circle: ->(v) { v } }, Array => { path: ->(a) { a } }
 } }

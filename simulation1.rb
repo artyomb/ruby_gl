@@ -22,7 +22,7 @@ class Render
   end
 
   attr_accessor :scene
-  def initialize(width: 500, height: 500)
+  def initialize(width: 500, height: 500, title: 'Hello')
     glClearColor 0.0, 0.0, 0.0, 0.0
     glShadeModel GL_FLAT
 
@@ -30,7 +30,7 @@ class Render
     glutInitDisplayMode GLUT_DOUBLE | GLUT_RGB
     glutInitWindowSize width, height
     glutInitWindowPosition 500, 200
-    glutCreateWindow 'Hello'
+    glutCreateWindow title
 
     glutDisplayFunc method :render
     glutReshapeFunc method :reshape
