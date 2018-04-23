@@ -31,24 +31,23 @@ renderer.scene = { objects: [links] + objects,
 }
 
 physics = Physics.new
+
 # Gravity
-physics.forces << proc do |obj|
+physics.forces << proc do |obj, others|
   k = 100.0
-  f_list = objects.reject{ |o| o == obj }.map { |o|
+  others.map { |o|
     r = o.position - obj.position
     k * o.mass * obj.mass * r.normalize / r.magnitude.abs2
-  }
-  f_list.inject(&:+)
+  }.inject(&:+)
 end
 
 # Proximity limit
-physics.forces << proc do |obj|
-  k2 = 2000.0
-  f_list = objects.reject{ |o| o == obj }.map { |o|
+physics.forces << proc do |obj, others|
+  k2 = 40.0
+  others.map { |o|
     r = o.position - obj.position
-    r.magnitude < 50 ? - k2 * r.normalize / r.magnitude.abs2 : Vector[0, 0]
-  }
-  f_list.inject(&:+)
+    r.magnitude < 50 ? - k2 * r.normalize / r.magnitude : Vector[0, 0]
+  }.inject(&:+)
 end
 
 renderer.run do

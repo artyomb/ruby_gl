@@ -22,9 +22,10 @@ class Physics
     delta *= 10
     @last = time.to_f
     objects.each do |obj|
+      others = objects.reject { |o| o == obj }
       next unless obj.class.ancestors.include? PhysicsObject
       obj.position += obj.velocity * delta
-      acceleration = @forces.inject(Vector[0,0]) { |sum, force| sum + force.call(obj) }
+      acceleration = @forces.inject(Vector[0,0]) { |sum, force| sum + force.call(obj, others) }
       obj.velocity += acceleration * delta / obj.mass
     end
   end
