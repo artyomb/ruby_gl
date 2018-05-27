@@ -77,7 +77,7 @@ class Render
     glColor3fv [0.1, 1.0, 0.1]
     @scene[:objects].each do |obj|
       types = [scene[:types][obj.class]].flatten
-      types.each do |type|
+      types.compact.each do |type|
         type.each do |name, func|
           glPushMatrix
           glColor3fv obj.color if obj.respond_to? :color

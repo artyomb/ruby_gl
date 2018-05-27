@@ -16,13 +16,12 @@ end
 
 objects = []
 objects << MagnetObject.new( position: Vector[150, 150], mass: 1.0, velocity: Vector.random(-2.0..2.0) )
-objects << MagnetObject.new( position: Vector[400, 150], mass: 1.0, velocity: Vector.random(-2.0..2.0) )
-objects << MagnetObject.new( position: Vector[200, 300], mass: 10.0 )
+objects << MagnetObject.new( position: Vector[300, 250], mass: 50.0, velocity: Vector[0, 1.5] )
+objects << MagnetObject.new( position: Vector[200, 250], mass: 50.0, velocity: Vector[0, -1.5] )
 
-links = objects + [objects.first]
-
-links = Render.grey links
 objects = objects.map { |o| Render.green o }
+links = objects + [objects.first]
+links = Render.grey links # links.render.grey.size(2)
 
 renderer = Render.new title: 'N-body problem'
 renderer.scene = { objects: [links] + objects,
@@ -34,7 +33,7 @@ physics = Physics.new
 
 # Gravity
 physics.forces << proc do |obj, others|
-  k = 100.0
+  k = 10.0
   others.map { |o|
     r = o.position - obj.position
     k * o.mass * obj.mass * r.normalize / r.magnitude.abs2
@@ -43,14 +42,14 @@ end
 
 # Proximity limit
 physics.forces << proc do |obj, others|
-  k2 = 40.0
+  k2 = 10.0
   others.map { |o|
     r = o.position - obj.position
-    r.magnitude < 50 ? - k2 * r.normalize / r.magnitude : Vector[0, 0]
+    r.magnitude < 100 ? - k2 * r.normalize / r.magnitude : Vector[0, 0]
   }.inject(&:+)
 end
 
 renderer.run do
-  time = Time.now.to_f
+  time = Time.now.to_f*10
   physics.step objects, time
 end
