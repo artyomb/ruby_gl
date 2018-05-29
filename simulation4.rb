@@ -2,11 +2,13 @@
 # https://vectr.com/tmp/b1vPZfoE0b/a1Q2d7s6e
 require './lib/render'
 require './lib/physics'
+$stdout.sync = false
 
 class Array
   def each_with_each
-    each do |e|
-      each do |e2|
+    each_with_index do |e, i|
+      each_with_index do |e2, i2|
+        next if i2 <= i
         next if e == e2
         yield e, e2
       end
@@ -38,7 +40,7 @@ class Node
   end
 end
 
-class HardLink
+class Link
   include Physics::PhysicsForce
   PRIORITY = 1
   attr_accessor :list
@@ -46,18 +48,25 @@ class HardLink
     @list = array
     @distances = {}
     @list.each_with_each do |o, o2|
-      @distances["#{o.object_id}-#{o2.object_id}"] = (o.position - o2.position).magnitude
+      @distances["#{o.object_id}-#{o2.object_id}"] = (o2.position - o.position).magnitude
     end
   end
+end
 
-  def step
+class SoftLink < Link
+  def step(_dt)
     @list.each_with_each do |o, o2|
       original = @distances["#{o.object_id}-#{o2.object_id}"]
-      r = o.position - o2.position
+      r = o2.position - o.position
       delta = r.magnitude - original
-      o.force_list << -r.normalize * delta * 0.001 rescue nil
-      # damping = 0.0001 * (o.velocity - o2.velocity)
-      # o.force_list << damping
+      delta *= 0.0003
+      next unless delta !=0
+
+      o.force_list << r.normalize * delta
+      o2.force_list << -r.normalize * delta
+
+#      o.velocity *= 0.9999 dot r
+#      o2.velocity *= 0.9999 dot r
     end
   end
 end
@@ -70,7 +79,7 @@ class Engine
     @power = power
     @dynamics = dynamics
   end
-  def step
+  def step(dt)
     @node.force_list << Vector[0, -0.0005]
   end
 end
@@ -87,9 +96,10 @@ class Ship
   def link; @hard_link end
 
   def initialize(position:, velocity: Vector[0, 0], size: 200, mass: 1.0)
-    @hard_link = HardLink.new [
-      Node.new(position: position - Vector[size * 0.5, 0], velocity: velocity, mass: mass * 0.3),
-      Node.new(position: position + Vector[0, -size * 0.4], velocity: velocity, mass: mass * 0.6),
+    @hard_link = SoftLink.new [
+      Node.new(position: position - Vector[size * 0.5, 0], velocity: velocity, mass: mass * 0.4),
+      Node.new(position: position + Vector[-size * 0.1, -size * 0.4], velocity: velocity, mass: mass * 0.25),
+      Node.new(position: position + Vector[size * 0.1, -size * 0.4], velocity: velocity, mass: mass * 0.25),
       Node.new(position: position + Vector[size * 0.5, 0], velocity: velocity, mass: mass * 0.1)
     ]
     @engines = []
@@ -103,8 +113,9 @@ world = Scene.new [ship]
 
 renderer = Render.new title: 'Ship'
 renderer.scene = { objects: world,
-                   types: { Node => { circle: ->(o) { o.position } },
-                            HardLink => { path: ->(a) { a.list.map(&:position) } } }
+                   types: { Node => { circle: ->(o) { o.position} },
+                            SoftLink => { path: ->(a) { a.list.map(&:position) << a.list.first.position } },
+                   }
 }
 
 physics = Physics.new
@@ -119,6 +130,6 @@ physics.forces << proc do |obj|
 end
 
 renderer.run do
-  time = Time.now.to_f * 30
+  time = Time.now.to_f * 40
   physics.step world, time
 end
