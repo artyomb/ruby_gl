@@ -31,6 +31,7 @@ class Render
   end
 
   def circle(pos, size = 7.0, steps = 10)
+    glPushMatrix
     glTranslate pos[0], pos[1], 0
     glBegin GL_POLYGON
     #glBegin GL_LINE_LOOP
@@ -40,6 +41,7 @@ class Render
       glVertex3f Math.cos(i) * size, Math.sin(i) * size, 0.0
     end
     glEnd
+    glPopMatrix
   end
 
   attr_accessor :scene
@@ -78,12 +80,16 @@ class Render
     @scene[:objects].each do |obj|
       types = [scene[:types][obj.class]].flatten
       types.compact.each do |type|
-        type.each do |name, func|
-          glPushMatrix
-          glColor3fv obj.color if obj.respond_to? :color
-          send name, func.call(obj)
-          glPopMatrix
+        glPushMatrix
+        obj.respond_to?(:color) ? glColor3fv(obj.color) : glColor3fv([0.1, 1.0, 0.1])
+        if type.is_a? Proc
+          type.call self, obj
+        else
+          type.each do |name, func|
+            send name, func.call(obj)
+          end
         end
+        glPopMatrix
       end
     end
 

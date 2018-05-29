@@ -7,7 +7,7 @@ class Physics
 
   module PhysicsObject
     attr_accessor :position, :velocity, :mass
-    attr_accessor :force_list
+    attr_accessor :force_list, :forces
     def sim_params(position:, velocity: Vector[0, 0], mass: 1.0)
       @position = position
       @velocity = velocity
@@ -25,6 +25,7 @@ class Physics
     delta = time - @last
     delta *= 10
     @last = time.to_f
+    delta = 6
 
     physics_objects = objects.select { |o| o.class.ancestors.include? PhysicsObject }
     physics_forces = objects.select { |o| o.class.ancestors.include? PhysicsForce }
@@ -36,13 +37,14 @@ class Physics
       obj.force_list += @forces.map { |force| force.call(obj, others) }
     end
 
-    physics_forces.each { |o| o.step(delta) if o.respond_to?(:step) }
+    physics_forces.each(&:step)
 
     # https://www.myphysicslab.com/springs/single-spring-en.html
     # https://habr.com/post/341986/
     physics_objects.each do |obj|
       force = obj.force_list.inject(&:+)
       obj.velocity += force * delta / obj.mass
+      obj.velocity *= 0.999
       obj.position += obj.velocity * delta
     end
   end
