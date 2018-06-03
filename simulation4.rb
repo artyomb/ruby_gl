@@ -170,7 +170,7 @@ class CollisionDetection
 end
 
 world = Scene.new
-world << Ship.new(position: Vector[250, 150])
+world << Ship.new(position: Vector[250, 100])
 
 renderer = Render.new title: 'Ship'
 renderer.scene = { objects: world,

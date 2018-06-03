@@ -5,7 +5,7 @@ class PhysicsVerlet
   # Force Newton (N) = kg⋅m⋅s−2
   # Joule(J) = N⋅m = kg⋅m2⋅s−2
   # Watt = J/s = kg⋅m2⋅s−3
-  STEP_TIME = 0.0005 # sec
+  STEP_TIME = 0.005 # sec
   VECTOR_ZERO = Vector[0, 0].freeze
 
   module PhysicsForce; end
@@ -40,7 +40,7 @@ class PhysicsVerlet
     @physics_forces.each(&:step)
 
     # TODO unreal: http://www.aclockworkberry.com/unreal-engine-substepping/
-    #
+    # TODO http://physics.weber.edu/schroeder/md/
     # Verlet integration
     # TODO http://lonesock.net/article/verlet.html
     # xi+1 = xi + (xi - xi-1) * (dti / dti-1) + a * dti * dti
@@ -53,7 +53,7 @@ class PhysicsVerlet
 
       prev = obj.position
       df = obj.mass > 0 ? obj.force_sum * delta * delta / obj.mass : VECTOR_ZERO
-      obj.position += obj.position - obj.position_prev + df
+      obj.position += (obj.position - obj.position_prev + df) * 0.99995
       obj.position_prev = prev
 
       obj.force = obj.force_sum
