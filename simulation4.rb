@@ -4,25 +4,6 @@ require './lib/render'
 require './lib/physics_verlet'
 $stdout.sync = true
 
-class Array
-  def each_with_each
-    each_with_index do |e, i|
-      each_with_index do |e2, i2|
-        next if i2 <= i
-        next if e == e2
-        yield e, e2
-      end
-    end
-  end
-  def each_with_each_full
-    each do |e|
-      each do |e2|
-        yield e, e2 unless e == e2
-      end
-    end
-  end
-end
-
 class Scene
   include Enumerable
   def initialize(*args)
@@ -43,65 +24,6 @@ class Scene
     end
   end
 end
-
-class Node
-  include PhysicsVerlet::PhysicsObject
-  def initialize(position:, velocity: Vector[0, 0], mass: 1.0)
-    sim_params(position: position, velocity: velocity, mass: mass)
-  end
-end
-
-class HardLink
-  include PhysicsVerlet::PhysicsConstrain
-  attr_accessor :pair
-  def initialize(o1, o2)
-    @pair = [o1, o2]
-    @distance = (o1.position - o2.position).magnitude
-  end
-
-  def step
-    o1, o2 = @pair
-    r = o2.position - o1.position
-    delta = r.magnitude - @distance
-    delta *= 0.6
-    return unless delta != 0
-    if o2.mass > 0
-      k = o1.mass / o2.mass
-      d1 = delta * k / (1 + k)
-      d2 = delta - d1
-      o1.position += r.normalize * d2
-      o2.position -= r.normalize * d1
-    else
-      o2.position -= r.normalize * delta
-    end
-  end
-end
-
-class SoftLink
-  include PhysicsVerlet::PhysicsForce
-  attr_accessor :pair, :k
-  def initialize(o1, o2, k = 300)
-    @k = k
-    @pair = [o1, o2]
-    @distance = (o1.position - o2.position).magnitude
-  end
-
-  def displacement
-    r = @pair.first.position - @pair.last.position
-    r.magnitude - @distance
-  end
-
-  def step
-    o1, o2 = @pair
-    r = o1.position - o2.position
-    rn = r.normalize
-    delta = r.magnitude - @distance
-    delta += 0.1 * (o1.velocity - o2.velocity).dot(rn)
-    o1.force_sum += -rn * delta * @k
-    o2.force_sum += rn * delta * @k
-  end
-end
-
 
 class Engine
   include PhysicsVerlet::PhysicsForce
@@ -124,6 +46,12 @@ class Ship
     @links.each(&block)
   end
 
+  # https://vectr.com/tmp/aCds4rYmV/gJq52axTr
+  # https://www.youtube.com/watch?v=DFOynlRYT54
+  # https://www.reddit.com/r/starcitizen/comments/6n5nza/springy_landing_gear/
+  # https://www.gamedev.net/articles/programming/math-and-physics/towards-a-simpler-stiffer-and-more-stable-spring-r3227/
+  # http://blog.rectorsquid.com/2018/05/
+  # TODO: Blender https://github.com/RMKD/scripting-blender-game-engine/blob/master/tutorial.md
   def initialize(position:, velocity: Vector[0, 0], size: 200, mass: 100.0)
     @nodes = [
       Node.new(position: position - Vector[size * 0.5, 0], velocity: velocity, mass: mass * 0.3),
@@ -224,7 +152,7 @@ end
 p_fps = FPS.new :Physics
 fps = FPS.new :Render
 renderer.run do
-  100.times do
+  10.times do
     physics.step world
     p_fps.print
   end

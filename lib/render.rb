@@ -45,7 +45,14 @@ class Render
   end
 
   attr_accessor :scene
-  def initialize(width: 500, height: 500, title: 'Hello')
+  def initialize(width: 500, height: 500, title: 'Hello', frame: [0, width, height, 0])
+    @frame = frame
+    @width = width
+    @height = height
+    aspect1 = @width / @height
+    aspect2 = (@frame[1] - @frame[0]) / (@frame[3] - @frame[2])
+    @aspect = aspect2 / aspect1
+
     glClearColor 0.0, 0.0, 0.0, 0.0
     glShadeModel GL_FLAT
 
@@ -97,10 +104,21 @@ class Render
   end
 
   def reshape(w, h)
+    w_delta =  w.to_f /  @width
+    h_delta =  h.to_f /  @height
+
+    h_delta *= @aspect.abs
+
+    scale = [w_delta, h_delta].min
+
+    w_delta /= scale
+    h_delta /= scale
+
     glViewport 0, 0, w, h
     glMatrixMode GL_PROJECTION
     glLoadIdentity
-    GLU.Ortho2D 0.0, w, h, 0.0
+    GLU.Ortho2D @frame[0] * w_delta, @frame[1] * w_delta,
+                @frame[2] * h_delta, @frame[3] * h_delta
   end
 
   def idle
