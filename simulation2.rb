@@ -18,19 +18,19 @@ class TailedObject
 
   def step(time)
     @last ||= time
-    if time - @last < 3
+    if time - @last < 0.2
       @path[0] = position.dup unless @path.empty?
       return
     end
     @last = time
 
     @path.unshift position.dup
-    @path.slice!(6..-1)
+    @path.slice!(12..-1)
   end
 end
 
 objects = []
-objects += Array.new(10) { TailedObject.new position: Vector.random(0..500), velocity: Vector.random(-1.0..1.0) }
+objects += Array.new(10) { TailedObject.new position: Vector.random(0..500), velocity: Vector.random(-1.0..1.0)*0.2 }
 
 renderer = Render.new
 renderer.scene = { objects: objects,
@@ -39,7 +39,7 @@ renderer.scene = { objects: objects,
 physics = Physics.new
 physics.forces << proc do |obj|
   center = Vector[300, 300]
-  k = 0.1
+  k = 0.0001
   (center - obj.position).normalize * k
 end
 

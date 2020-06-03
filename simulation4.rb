@@ -59,19 +59,19 @@ class Ship
       Node.new(position: position + Vector[size * 0.3, -size * 0.4], velocity: velocity, mass: mass * 0.35),
       Node.new(position: position + Vector[size * 0.5, 0], velocity: velocity, mass: mass * 0.3),
 
-      Node.new(position: position + Vector[0, size * 0.05], velocity: velocity, mass: 0),
+      Node.new(position: position + Vector[0, size * 0.05], velocity: velocity, mass: mass * 0.1),
       Node.new(position: position + Vector[-size * 0.8, size * 0.3], velocity: velocity, mass: mass * 0.01),
       Node.new(position: position + Vector[+size * 0.8, size * 0.3], velocity: velocity, mass: mass * 0.01)
     ]
     @links = [
       [0, 1], [1, 2], [2, 3], [3, 0], [0, 2], [1, 3], [0, 4], [4, 3], [1, 4], [2,4]
-    ].map{ |pair| HardLink.new *pair.map{ |i| @nodes[i] } }
+    ].map{ |pair| SoftLink.new *pair.map{ |i| @nodes[i] } }
 
     @links << HardLink.new(@nodes[0], @nodes[5])
-    @links << SoftLink.new(@nodes[4], @nodes[5])
+    @links << SoftLink.new(@nodes[4], @nodes[5], 400)
 
     @links << HardLink.new(@nodes[3], @nodes[6])
-    @links << SoftLink.new(@nodes[4], @nodes[6])
+    @links << SoftLink.new(@nodes[4], @nodes[6], 400)
 
     @engines = []
     @engines << Engine.new(node: @nodes[0])
@@ -152,7 +152,8 @@ end
 p_fps = FPS.new :Physics
 fps = FPS.new :Render
 renderer.run do
-  10.times do
+  c = 0.1 / PhysicsVerlet::STEP_TIME
+  c.to_i.times do
     physics.step world
     p_fps.print
   end

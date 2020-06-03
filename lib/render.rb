@@ -46,6 +46,7 @@ class Render
 
   attr_accessor :scene
   def initialize(width: 500, height: 500, title: 'Hello', frame: [0, width, height, 0])
+    @title = title
     @frame = frame
     @width = width
     @height = height
@@ -65,6 +66,10 @@ class Render
     glutDisplayFunc method :render
     glutReshapeFunc method :reshape
     glutIdleFunc method :idle
+    glutKeyboardFunc method :keyboard
+    glutMouseFunc method :mouse
+    glutMotionFunc method :motion
+    glutPassiveMotionFunc method :passive_motion
 
     @quad = glGenLists 1
     glNewList @quad, GL_COMPILE
@@ -76,12 +81,56 @@ class Render
     glEnd
     glEndList
     @scene = { objects: [], types: {} }
+    @pause = false
+  end
+
+  def motion(x, y)
+    p [x, y]
+  end
+
+  def passive_motion(x, y)
+    p [x, y]
+    glutWarpPointer 100, 100 unless x == 100 && y == 100 || @pause
+  end
+
+  def mouse(button, state, x, y)
+    glutSetCursor(GLUT_CURSOR_NONE)
+    p [button, state, x, y]
+    modifiers = glutGetModifiers
+    p modifiers
+  end
+
+  def keyboard(key, x, y)
+    puts "key:#{key.bytes[0]} x:#{x}, y:#{y}"
+    case key.bytes[0]
+    when 27; exit(0) # Escape key
+    when 32
+      @pause = @pause ? false : true
+    end
+  end
+
+  def overlay(&block)
+    @overlay_block = block
+  end
+
+  def render_overlay
+    glMatrixMode GL_PROJECTION
+    @overlay_block.call(self) if @overlay_block
+#    glPushMatrix
+#    glLoadIdentity
+#    glOrtho 0, @w, @h, 0, -1, 1
+#   text 0,0,"Tile: #{@title}"
+#    glPopMatrix
+  end
+
+  def text(x, y, text)
+    glRasterPos2d x, y
+    text.each_byte { |x| glutBitmapCharacter(GLUT_BITMAP_9_BY_15, x) }
   end
 
   def render
     glClear GL_COLOR_BUFFER_BIT
     glMatrixMode GL_MODELVIEW
-    glLoadIdentity
 
     glColor3fv [0.1, 1.0, 0.1]
     @scene[:objects].each do |obj|
@@ -100,10 +149,12 @@ class Render
       end
     end
 
+    render_overlay
     glutSwapBuffers
   end
 
   def reshape(w, h)
+    @w, @h = w, h
     w_delta =  w.to_f /  @width
     h_delta =  h.to_f /  @height
 
@@ -122,7 +173,7 @@ class Render
   end
 
   def idle
-    @block.call self if @block
+    @block.call self if @block && !@pause
     glutPostRedisplay
   end
 

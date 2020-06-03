@@ -15,9 +15,9 @@ class MagnetObject
 end
 
 objects = []
-objects << MagnetObject.new( position: Vector[150, 150], mass: 1.0, velocity: Vector.random(-2.0..2.0) )
-objects << MagnetObject.new( position: Vector[300, 250], mass: 50.0, velocity: Vector[0, 1.5] )
-objects << MagnetObject.new( position: Vector[200, 250], mass: 50.0, velocity: Vector[0, -1.5] )
+objects << MagnetObject.new( position: Vector[150, 150], mass: 1.0, velocity: Vector.random(-1.0..1.0)*0.0 )
+objects << MagnetObject.new( position: Vector[300, 250], mass: 50.0, velocity: Vector[0, 0.5]*0.0 )
+objects << MagnetObject.new( position: Vector[200, 250], mass: 50.0, velocity: Vector[0, -0.5]*0.0 )
 
 objects = objects.map { |o| Render.green o }
 links = objects + [objects.first]
@@ -33,7 +33,7 @@ physics = Physics.new
 
 # Gravity
 physics.forces << proc do |obj, others|
-  k = 10.0
+  k = 0.2
   others.map { |o|
     r = o.position - obj.position
     k * o.mass * obj.mass * r.normalize / r.magnitude.abs2
@@ -42,7 +42,7 @@ end
 
 # Proximity limit
 physics.forces << proc do |obj, others|
-  k2 = 10.0
+  k2 = 0.2
   others.map { |o|
     r = o.position - obj.position
     r.magnitude < 100 ? - k2 * r.normalize / r.magnitude : Vector[0, 0]
