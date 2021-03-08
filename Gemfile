@@ -4,4 +4,4 @@ gem 'glu'
 gem 'glut'
 gem 'opengl'
 gem 'nokogiri'
-#gem 'rmagick'
+gem 'rmagick' # sudo apt-get install imagemagick libmagickwand-dev

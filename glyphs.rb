@@ -3,9 +3,19 @@ require 'matrix'
 require 'opengl'
 require 'glu'
 require 'glut'
+require 'rmagick'
 include Gl, Glu, Glut
 
 class Render
+
+  def save_screenshot(name)
+    @count ||= 0
+    title = @title
+    img = Magick::Image.capture(true) { self.filename = title } # self.filename is actually window title
+    img.write name % { count: @count }
+    @count += 1
+  end
+
   def point(pos, size=10)
     glPushMatrix
     #glTranslate pos[0] - size * 0.5, pos[1] - size * 0.5, 0
@@ -16,6 +26,7 @@ class Render
   end
 
   def initialize(width: 500, height: 500, title: 'Glyphs')
+    @title = title
     glClearColor 0.0, 0.0, 0.0, 0.0
     glShadeModel GL_FLAT
 
@@ -44,7 +55,7 @@ class Render
   def keyboard(key, x, y)
     case key.bytes[0]
     when 27; exit(0) # Escape key
-    when 32; @key_block.call key, self if @key_block
+    else @key_block.call key, self if @key_block
     end
     glutPostRedisplay
   end
@@ -129,6 +140,7 @@ renderer.on_render do |r|
 end
 renderer.on_key do |k, r|
   :repeat until (gl = Glyph.new dimension).good?
+  r.save_screenshot 'glyph_%{count}.jpg' if k == 's'
 end
 
 renderer.run

@@ -24,4 +24,6 @@ renderer.run do
   physics.step renderer.scene[:objects], Time.now.to_f
 end
 ```
- 
+
+### Glyphs
+[Glyphs](glyphs.md)

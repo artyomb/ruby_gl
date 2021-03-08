@@ -4,6 +4,7 @@ require 'glut'
 include Gl, Glu, Glut
 
 require 'matrix'
+require 'rmagick'
 
 class Object
   def attr(sym, value)
@@ -16,6 +17,19 @@ class Render
   def self.green(obj); obj.attr(:color, [0, 1, 0]) end
   def self.grey(obj); obj.attr(:color, [0.3, 0.3, 0.3]) end
   def self.white(obj); obj.attr(:color, [1, 1, 1]) end
+
+  def save_screenshot(name, window_title = @title)
+    @scount ||= 0
+    img = Magick::Image.capture(true) { self.filename = window_title } # self.filename is actually window title
+    img.write name % { count: @scount }
+    @scount += 1
+
+    # width, height = glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT)
+    # pixels = glReadPixels  0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE
+    # img = Magick::Image.new width, height # img = Magick::Image.constitute width, height, 'RGB', pixels.unpack('C*')
+    # img.import_pixels 0, 0, width, height, 'RGB', pixels
+    # img.display
+  end
 
   def point(pos)
     size = 4
