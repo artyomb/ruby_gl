@@ -8,7 +8,7 @@
 </p>
 
 # Stargate the ancients' language
-I'm a big fan of the Stargate series! I was thinking about the ordinary symbols of the ancients' language. 
+I'm a big fan of the Stargate series! I was thinking about the unordinary symbols of the ancients' language. 
 
 I found their form to have a bit-like structure. So I started with a randomly generated pattern NxN.
 
