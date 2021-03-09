@@ -1,5 +1,3 @@
-[glyphs.rb](glyphs.rb)
-
 <p float="left">
     <img src="./glyph_0.jpg" width="100" height="whatever"/>
     <img src="./glyph_1.jpg" width="100" height="whatever"/>
@@ -20,5 +18,6 @@ Then I found some patterns don't look _good_. So, I added check functions to exc
 - **no_chess?** Exclude 'chess' structures.
 
 The script generates new glyphs on each key press. Press 's' to take the screenshot.
+[glyphs.rb](glyphs.rb)
 
 An extended alphabet of the ancients' language! 
