@@ -8,13 +8,11 @@
 </p>
 
 # Stargate the ancients' language
-I'm a big fun of Stargate series! I was thinking about the unodinary symbols
-of the ancients' language. 
+I'm a big fan of the Stargate series! I was thinking about the ordinary symbols of the ancients' language. 
 
-I found there form to have bit-like structure. So I started with random generated pattern NxN.
+I found their form to have a bit-like structure. So I started with a randomly generated pattern NxN.
 
-Then I found that some patterns doesn't look _good_. 
-So, I added check functions to exclude these patterns.
+Then I found some patterns don't look _good_. So, I added check functions to exclude these patterns.
 
 - **no_quads?**
     Exclude 'bold' structures.
